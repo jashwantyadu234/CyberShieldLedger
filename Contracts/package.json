@@ -1,0 +1,16 @@
+{
+  "name": "cybershield-ledger-contracts",
+  "private": true,
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:amoy": "hardhat run scripts/deploy.ts --network amoy"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}

@@ -1,0 +1,83 @@
+# ==========================================
+# Environment Variables, Secrets & Keys
+# ==========================================
+*.env
+*.env.*
+!.env.example
+!*.env.example
+
+# Secret keys, credentials and certificates
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+*.pkcs12
+id_rsa*
+id_ed25519*
+secrets.json
+credentials.json
+backend/.env
+frontend/.env
+Contracts/.env
+
+# ==========================================
+# Database & Local Evidence Storage
+# ==========================================
+backend/cybershield.db
+*.db
+*.sqlite
+*.sqlite3
+backend/evidence/encrypted/*
+backend/evidence/uploads/*
+backend/evidence/temp/*
+backend/evidence/encrypted/
+backend/evidence/uploads/
+backend/evidence/temp/
+backend/data/
+data/
+
+# ==========================================
+# Python
+# ==========================================
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# ==========================================
+# Node.js, Frontend & Build Outputs
+# ==========================================
+node_modules/
+**/node_modules/
+frontend/node_modules/
+frontend/dist/
+dist/
+build/
+.next/
+.nuxt/
+*.log
+
+# ==========================================
+# Smart Contract & Hardhat Artifacts
+# ==========================================
+Contracts/artifacts/
+Contracts/cache/
+Contracts/typechain/
+Contracts/typechain-types/
+artifacts/
+cache/
+
+# ==========================================
+# IDE & System Files
+# ==========================================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+[Dd]esktop.ini

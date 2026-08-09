@@ -1,0 +1,1 @@
+"""Geographic heatmap extension point."""
