@@ -81,3 +81,9 @@ cache/
 .DS_Store
 Thumbs.db
 [Dd]esktop.ini
+
+# Documentation / Research files
+README.md
+RESEARCH_NOTES.md
+RESEARCH_PAPER.md
+CyberShield_Ledger_Research_Presentation*
