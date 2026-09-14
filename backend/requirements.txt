@@ -13,4 +13,4 @@ numpy>=1.26.0
 cryptography>=42.0.0
 Pillow>=10.0.0
 pytesseract>=0.3.10
-mangum>=1.7.0
+mangum>=0.17.0
