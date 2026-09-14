@@ -21,6 +21,7 @@ from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import func, cast, Date
+from sqlalchemy.exc import IntegrityError
 from dotenv import load_dotenv
 from pydantic import BaseModel
 from cryptography.exceptions import InvalidSignature
@@ -277,17 +278,47 @@ def playbook_for(crime_type: str, category: str) -> list[str]:
 def register(data: RegisterRequest, db: Session = Depends(get_db)):
     if data.role not in {"citizen", "investigator"}:
         raise HTTPException(status_code=400, detail="Only citizen and investigator accounts can be registered")
-    if len(data.password) < 8:
+    if not data.password or len(data.password) < 8:
         raise HTTPException(status_code=400, detail="Password must be at least 8 characters")
-    existing = db.query(User).filter(User.email == data.email).first()
+
+    clean_email = data.email.strip().lower() if data.email else ""
+    if not clean_email:
+        raise HTTPException(status_code=400, detail="Valid email is required")
+
+    existing = db.query(User).filter(func.lower(User.email) == clean_email).first()
     if existing:
         raise HTTPException(status_code=400, detail="Email already registered")
+
+    clean_badge_id = data.badge_id.strip() if data.badge_id and data.badge_id.strip() else None
+    if clean_badge_id:
+        existing_badge = db.query(User).filter(User.badge_id == clean_badge_id).first()
+        if existing_badge:
+            raise HTTPException(status_code=400, detail="Badge ID already registered")
+
+    clean_phone = data.phone_number.strip() if data.phone_number and data.phone_number.strip() else None
     status = "approved" if data.role == "citizen" else "pending"
-    user = User(name=data.name, email=data.email, password=hash_password(data.password),
-                role=data.role, status=status, badge_id=data.badge_id, phone_number=data.phone_number)
-    db.add(user)
-    db.commit()
-    db.refresh(user)
+
+    user = User(
+        name=data.name.strip() if data.name else "",
+        email=clean_email,
+        password=hash_password(data.password),
+        role=data.role,
+        status=status,
+        badge_id=clean_badge_id,
+        phone_number=clean_phone
+    )
+
+    try:
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Registration failed. Email or Badge ID already exists.")
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Registration error: {str(e)}")
+
     return AuthResponse(
         success=True,
         message="Registration successful" if status == "approved" else "Submitted for admin approval",

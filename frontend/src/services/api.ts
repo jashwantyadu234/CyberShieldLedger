@@ -1,12 +1,14 @@
 import axios from 'axios'
 
 // Most screens use the default Axios export directly, while some import the
-// configured client below. Both use the same-origin `/api` route: Vite proxies
-// it locally and Vercel proxies it to Render in production.
-axios.defaults.baseURL = ''
+// configured client below. In development this remains same-origin so Vite
+// proxies `/api` to FastAPI; in production it can call the API origin directly
+// and does not depend on a hosting-provider rewrite.
+const apiOrigin = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
+axios.defaults.baseURL = apiOrigin
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: `${apiOrigin}/api`,
   headers: { 'Content-Type': 'application/json' },
 })
 
