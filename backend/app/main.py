@@ -137,6 +137,28 @@ with engine.begin() as connection:
         except Exception:
             pass
 
+# Auto-seed default admin account on server startup if none exists
+try:
+    with SessionLocal() as db:
+        admin_email = os.getenv("ADMIN_EMAIL", "admin@cybershield.com").strip().lower()
+        admin_password = os.getenv("ADMIN_PASSWORD", "AdminPassword123!")
+        existing_admin = db.query(User).filter(func.lower(User.email) == admin_email).first()
+        if not existing_admin:
+            default_admin = User(
+                name="System Administrator",
+                email=admin_email,
+                password=hash_password(admin_password),
+                role="admin",
+                status="approved",
+                badge_id="ADMIN-001",
+            )
+            db.add(default_admin)
+            db.commit()
+            print(f"✅ Auto-seeded default admin account: {admin_email}")
+except Exception as _seed_err:
+    print(f"⚠️  Admin auto-seed warning: {_seed_err}")
+
+
 # ============================================================
 # FastAPI App
 # ============================================================

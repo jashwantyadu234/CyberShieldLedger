@@ -17,3 +17,8 @@ services:
         sync: false
       - key: GEMINI_API_KEY
         sync: false
+      - key: ADMIN_EMAIL
+        value: admin@cybershield.com
+      - key: ADMIN_PASSWORD
+        value: AdminPassword123!
+
