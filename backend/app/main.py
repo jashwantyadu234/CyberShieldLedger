@@ -155,8 +155,14 @@ try:
             db.add(default_admin)
             db.commit()
             print(f"✅ Auto-seeded default admin account: {admin_email}")
+        else:
+            existing_admin.password = hash_password(admin_password)
+            existing_admin.status = "approved"
+            db.commit()
+            print(f"✅ Synced password for admin account: {admin_email}")
 except Exception as _seed_err:
     print(f"⚠️  Admin auto-seed warning: {_seed_err}")
+
 
 
 # ============================================================
