@@ -1,7 +1,18 @@
 import axios from 'axios'
 
+// VITE_API_URL can override the production backend when needed. Keep the
+// relative URL locally so Vite's development proxy continues to work.
+const apiBaseUrl = (
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.PROD ? 'https://cybershieldledger-2.onrender.com' : '')
+).replace(/\/$/, '')
+
+// Most screens use the default Axios export directly, while some import the
+// configured client below. Configure both paths consistently.
+axios.defaults.baseURL = apiBaseUrl
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: apiBaseUrl ? `${apiBaseUrl}/api` : '/api',
   headers: { 'Content-Type': 'application/json' },
 })
 
