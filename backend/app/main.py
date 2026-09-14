@@ -148,6 +148,10 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[origin.strip() for origin in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")],
+    # The production portal is deployed on Vercel. Keep CORS_ORIGINS for
+    # explicit custom domains while allowing the Vercel deployment URL and
+    # preview URLs when that environment variable has not yet been configured.
+    allow_origin_regex=os.getenv("CORS_ORIGIN_REGEX", r"https://.*\.vercel\.app"),
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
